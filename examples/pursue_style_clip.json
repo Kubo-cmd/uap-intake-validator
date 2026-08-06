@@ -1,0 +1,10 @@
+{
+  "timestamp_utc": "2026-05-01T14:22:00Z",
+  "time_sync_precision_s": 2,
+  "sensor_position": [34.0, -118.0, 7600],
+  "position_datum": "WGS84",
+  "field_of_view_deg": 0.7,
+  "bearing_count": 60,
+  "sensor_type": "IR pod",
+  "platform_motion": "straight-level"
+}
