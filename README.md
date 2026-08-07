@@ -32,6 +32,13 @@ straight-and-level path watching a constant-velocity object yields a rank-defici
 design system: infinitely many ranges fit the same angular track. Any single number
 is then an artifact of the analyst's prior, not the data.
 
+Even with two synchronized observers, range uncertainty grows quadratically with
+target distance and shrinks only linearly with sensor baseline — see
+[`docs/DETECTION-RANGE.md`](docs/DETECTION-RANGE.md). This tool validates the
+geometry of a specific event; it does not detect objects and makes no claim about
+system-level detection capability at any range, for any sensor type (infrared or
+visible).
+
 ## What it does
 
 `validator.assess_sighting(record)` splits analyst-supplied assumptions from
