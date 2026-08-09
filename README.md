@@ -167,6 +167,20 @@ python3 simulate.py                                             # reproduce veri
 python3 nested_sim.py                                           # calibration audit
 ```
 
+## Related integrity repositories
+
+This repository is the only canonical implementation of the validator. Two
+solver-free companions preserve different trust boundaries under the same
+public account:
+
+- `uap-witness-validator` — append-only status and evidence ledger with an
+  offline verifier; it contains no working solver.
+- `releases` — independent Git-history mirror of the frozen v0.1.0 artifacts,
+  checksums, seal, relic, and publication receipt.
+
+Both companions point back here. Neither replaces this source tree, its tests,
+or its scientific scope.
+
 Current validator runtime: Python 3.9+, stdlib-only, MIT license. The frozen
 historical evidence harness additionally requires the exact versions in
 `requirements-evidence.txt`. Methodology credit: the upstream Sitrec2 project;
