@@ -1,4 +1,19 @@
-# uap-intake
+# UAP Intake Validator — Run the software
+
+## Start here
+
+This project has three connected repositories. Choose the one that matches what
+you want to do:
+
+| Goal | Repository | What is there |
+|---|---|---|
+| Run or inspect the research software | **[UAP Intake Validator](https://github.com/Kubo-cmd/uap-intake-validator)** | Canonical code, tests, methodology, and scientific evidence |
+| Understand the current status and its history | **[UAP Witness Ledger](https://github.com/Kubo-cmd/uap-witness-validator)** | Solver-free append-only status records and exact evidence hashes |
+| Verify or recover the frozen release | **[UAP Release Vault](https://github.com/Kubo-cmd/releases)** | Frozen release files, checksums, seals, receipts, and offline verification |
+
+Recommended flow: **1. Run the software → 2. Read the status history → 3. Verify
+the frozen release.** The three repositories are connected by release names,
+versions, commits, and SHA-256 hashes, but each has one distinct job.
 
 Release candidate: `0.1.0` — experimental, simulation-evaluated research software.
 
