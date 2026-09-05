@@ -1,0 +1,14 @@
+{
+  "schema": "uap-intake-validator/runtime-development/v1",
+  "runtime_version": "0.2.0-dev",
+  "status": "unreleased-development",
+  "entrypoints": ["validator.py", "uap_assess.py"],
+  "implementation": "runtime_v0_2.py",
+  "frozen_release": {
+    "version": "0.1.0",
+    "mutable": false,
+    "manifest": "evidence/results/holdout-2026080502.manifest.json",
+    "manifest_sha256": "745a2f2efefd58e28eaf87803d110c5b27142d3b2ccef36f94477c149a46b3e8"
+  },
+  "non_claim": "Development metadata does not reinterpret, rerun, or reseal the frozen holdout."
+}

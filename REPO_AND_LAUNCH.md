@@ -60,6 +60,6 @@ Before public release, require all of the following:
 - clean-room conditioning implementation and tests pass;
 - current runtime tests pass with warnings promoted to errors;
 - frozen evidence verifier and lifecycle tests pass without writing artifacts;
-- repository history contains one neutral release commit and no identity-bearing metadata;
+- the candidate release commit uses a neutral project identity and tracked files contain no personal or machine-path data; immutable published ancestry is documented rather than rewritten;
 - exact committed archive passes the same gates after extraction;
 - no remote publication, deployment, or social posting is automated.

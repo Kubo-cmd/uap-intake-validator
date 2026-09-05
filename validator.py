@@ -7,7 +7,7 @@ modeled.
 """
 from math import isfinite
 
-import intake as _frozen
+import runtime_v0_2 as _runtime
 
 
 GEOMETRY_SUPPORTED = "RANGE SUPPORTED BY SYNCHRONIZED GEOMETRY"
@@ -26,13 +26,13 @@ def _exact_sync(record):
 
 
 def triangulate(record, _mc=True):
-    """Run the frozen geometric solver with conservative current claim gates.
+    """Run the versioned active geometric solver with conservative claim gates.
 
-    A nonzero synchronization uncertainty is accepted as input when the frozen
+    A nonzero synchronization uncertainty is accepted as input when the active
     solver accepts it, but it cannot produce a high-confidence range claim
     because target motion is not part of the uncertainty propagation model.
     """
-    result = _frozen.triangulate(record, _mc=_mc)
+    result = _runtime.triangulate(record, _mc=_mc)
     if not result or not result.get("solvable"):
         return result
 
@@ -86,8 +86,13 @@ def _measurement_lines(intake_result, flag, tri):
 
 def assess_sighting(record):
     """Assess one sighting with current conservative release semantics."""
-    intake_result = _frozen.validate_intake(record)
-    flag = _frozen.underdetermination_flag(record)
+    schema_errors = _runtime.validate_core_schema(record)
+    intake_result = _runtime.validate_intake(record)
+    if schema_errors:
+        intake_result = dict(intake_result)
+        intake_result["complete"] = False
+        intake_result["schema_errors"] = schema_errors
+    flag = _runtime.underdetermination_flag(record)
     tri = triangulate(record)
 
     if ((tri and tri.get("input_valid") is False) or

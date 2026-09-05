@@ -15,7 +15,9 @@ These hashes identify the reviewed working files before the final release commit
 
 ## Current runtime
 
-Use `validator.py`, directly or through `uap_assess.py`. It applies conservative claim gates:
+Use `validator.py`, directly or through `uap_assess.py`. The active numerical
+implementation is separately versioned in `runtime_v0_2.py`; it does not import
+the hash-bound historical `intake.py`. It applies conservative claim gates:
 
 - exact-zero declared synchronization uncertainty is required for the high-confidence geometry verdict;
 - absent or nonzero synchronization uncertainty remains low-confidence because target motion is not propagated;
@@ -24,7 +26,12 @@ Use `validator.py`, directly or through `uap_assess.py`. It applies conservative
 
 ## Frozen historical evidence
 
-`intake.py` and `evidence/stronger_evidence.py` remain byte-preserved because their hashes are bound into the frozen preregistration. The current `validator.py` claim-gating layer is separate, but it deliberately imports and delegates geometric and intake operations to the preserved `intake.py` implementation before applying stricter current gates. `evidence/stronger_evidence.py` is retained for the closed historical verifier. The active CLI and runtime tests enter through `validator.py`; this separates current verdict policy, not the underlying geometric implementation.
+`intake.py` and `evidence/stronger_evidence.py` remain byte-preserved because
+their hashes are bound into the frozen preregistration. They are not active
+runtime dependencies. `evidence/stronger_evidence.py` is retained only for the
+closed historical verifier. The separate `verify_frozen_bundle.py` performs a
+non-executing file verification against a source-embedded trusted manifest
+digest and an exact artifact-name allowlist.
 
 The frozen `intake.py` contains legacy comments describing an inner Monte Carlo
 bound as "calibrated" or "self-calibrating." Those phrases are preserved bytes,
@@ -34,3 +41,16 @@ labels the bound model-conditional and states that synthetic coverage does not
 establish field accuracy.
 
 The holdout protocol, result, rows, CSV, original manifest, and Council-status record remain unchanged. The status is `NOT_COUNCIL_CONFORMANT` with Council inferential status `UNDETERMINED`. The completed holdout must not be rerun, replaced, reanalyzed, reinterpreted, or resealed.
+
+## Immutable historical release identity
+
+The published `v0.1.0` tag is an immutable historical exception to the current
+neutral release-identity policy. It is documented rather than rewritten:
+
+- tag commit: `687d263dba1b5409037256a1c7ccbcca225ca20f`
+- tag tree: `5551c70774789ea166f45b7bc2e31f0c855a43f3`
+- committed release archive SHA-256: `c32f758d535e8fd4987ad4fc26ec1020f775218a8aa6db478d0d0f5168d57d57`
+
+Current work is explicitly `0.2.0-dev`; it is post-release development, not a
+retroactive alteration, reinterpretation, or reseal of `v0.1.0`. Future release
+commits must use a neutral project identity. No published tag is moved.

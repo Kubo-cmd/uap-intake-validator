@@ -13,6 +13,10 @@
   "bearing_count": 30,
   "sensor_count": 2,
   "fps": 30,
+  "position_units": "m",
+  "coordinate_frame": "ENU",
+  "bearing_units": "dimensionless",
+  "bearing_noise_units": "rad",
   "sensor_pos": [
     0.0,
     0.0,
