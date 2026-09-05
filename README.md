@@ -15,7 +15,9 @@ Recommended flow: **1. Run the software → 2. Read the status history → 3. Ve
 the frozen release.** The three repositories are connected by release names,
 versions, commits, and SHA-256 hashes, but each has one distinct job.
 
-Release candidate: `0.1.0` — experimental, simulation-evaluated research software.
+Published historical release: `v0.1.0`. The current source tree is
+`0.2.0-dev` and is unreleased experimental, simulation-evaluated research
+software. The published tag is immutable and is not moved by development work.
 
 A UAP sighting-intake validator with a built-in **underdetermination flag** and
 **two-sensor triangulation**. One question, answered honestly: **can this sighting
@@ -76,6 +78,13 @@ computed measurements and caveats:
   Reports range, 3D miss distance, baseline, and a simulation-derived uncertainty
   estimate under the declared bearing-noise model.
 - **remediation** — when not "good", actionable next steps.
+
+Operative geometry arrays use an explicit contract: `sensor_pos` (or
+`sensor_pos_ecef`, but never both), `sensor_pos_2`, and related vectors are in
+meters; `coordinate_frame` is `ENU` or `ECEF`; LOS vectors are dimensionless;
+and `bearing_noise_rad` requires `bearing_noise_units: "rad"`. The separate
+`sensor_position` and `position_datum` fields are acquisition metadata only and
+never authorize a geometric range claim.
 
 ## The one-way warning (doctrine)
 
@@ -195,6 +204,12 @@ public account:
 
 Both companions point back here. Neither replaces this source tree, its tests,
 or its scientific scope.
+
+## Contributing and security
+
+See `CONTRIBUTING.md` for the bounded change process and required local checks.
+Report security-sensitive defects privately using `SECURITY.md`; public issues
+must use synthetic data and contain no identifying records.
 
 Current validator runtime: Python 3.9+, stdlib-only, MIT license. The frozen
 historical evidence harness additionally requires the exact versions in

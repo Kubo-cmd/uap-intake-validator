@@ -76,7 +76,9 @@ def test_two_sensor_solves():
 def test_triangulation_claim_gates():
     base = {"timestamp_utc": "x", "sensor_position": [0, 0, 0],
             "position_datum": "ENU", "field_of_view_deg": 1,
-            "bearing_noise_rad": 0}
+            "position_units": "m", "coordinate_frame": "ENU",
+            "bearing_units": "dimensionless",
+            "bearing_noise_rad": 0, "bearing_noise_units": "rad"}
 
     behind = dict(base, sensor_pos=[0, 0, 0], los_dir=[1, 0, 0],
                   sensor_pos_2=[10, 10, 0], los_dir_2=[0, 1, 0])
@@ -323,7 +325,8 @@ def test_triangulation_claim_gates():
     malformed_sensor_count = dict(exact, sensor_count="two")
     out = assess_sighting(malformed_sensor_count)
     check("malformed sensor_count cannot crash assessment",
-          isinstance(out, dict) and out["triangulation"].get("solvable"), str(out)[-240:])
+          isinstance(out, dict) and out["verdict"] == "INVALID SIGHTLINE DATA" and
+          out["triangulation"].get("input_valid") is False, str(out)[-240:])
 
     for malformed_record in (None, True, 0, "sighting", [], [{}]):
         out = assess_sighting(malformed_record)
@@ -361,7 +364,10 @@ def test_false_good_zero(worlds=200):
         tri = triangulate({"sensor_pos": [*s1] * nn, "los_dir": ld1,
                            "sensor_pos_2": [*s2] * nn, "los_dir_2": ld2,
                            "fps": fps, "bearing_noise_rad": noise,
-                           "time_sync_precision_s": 0})
+                           "time_sync_precision_s": 0,
+                           "position_units": "m", "coordinate_frame": "ENU",
+                           "bearing_units": "dimensionless",
+                           "bearing_noise_units": "rad"})
         if not tri or not tri.get("solvable"):
             continue
         n += 1
@@ -485,7 +491,9 @@ def test_cli_and_gates():
           and "Traceback" not in missing_out, missing_out[-300:])
     invalid = subprocess.run(
         [sys.executable, os.path.join(ROOT, "uap_assess.py"), "/dev/stdin"],
-        input=json.dumps({"sensor_pos": [0, 0, 0], "los_dir": [0, 0, 0], "fps": 1}),
+        input=json.dumps({"sensor_pos": [0, 0, 0], "los_dir": [0, 0, 0], "fps": 1,
+                          "position_units": "m", "coordinate_frame": "ENU",
+                          "bearing_units": "dimensionless"}),
         capture_output=True, text=True, timeout=30)
     invalid_out = invalid.stdout + invalid.stderr
     check("CLI returns nonzero for domain-invalid sightline data",

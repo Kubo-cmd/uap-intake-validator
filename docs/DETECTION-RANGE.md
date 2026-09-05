@@ -8,43 +8,43 @@ constraint on any passive optical triangulation system, infrared or visible.
 
 ## Why distance is the challenge
 
-Two synchronized observers at known positions, separated by baseline `b`, each
-measure a bearing to the target. The range estimate comes from intersecting the
-two bearing rays. For a target at range `r` with bearing noise `sigma_theta`
-(radians, per sensor), the first-order range uncertainty of the intersection is
+Two synchronized observers at known positions each measure a bearing to the
+target. In the equal-range, far-field approximation, let `b_perp` be the
+component of their baseline perpendicular to the line of sight. For target range
+`r` and small per-sensor bearing noise `sigma_theta` in radians, the first-order
+range scale is
 
 ```
-sigma_r ≈ r^2 * sigma_theta / (b * sin(phi))
+sigma_r ≈ r^2 * sigma_theta / b_perp
 ```
 
-where `phi` is the crossing angle between the two rays (the angle at the target
-between the lines to the two sensors). Three consequences, all structural:
+Equivalently, because the small crossing angle obeys
+`sin(phi) ≈ b_perp / r`, the same sensitivity can be written
+`sigma_r ≈ r * sigma_theta / sin(phi)`. These are alternative
+parameterizations; multiplying them would count the geometry twice.
 
-1. **Quadratic in range.** Double the target distance and the range uncertainty
-   quadruples, everything else held fixed. This is the dominant term and the
-   reason "the main challenge is the distance" is not an implementation detail —
-   it is the geometry.
+Three consequences are structural:
 
-2. **Inversely proportional to baseline.** Wider sensor separation `b` buys
-   linear improvement. Long-baseline deployments are the only structural lever
-   that scales against the quadratic range term. Short baselines on a single
-   platform cannot compensate at distance.
+1. **Quadratic in range for fixed baseline.** Double the target distance and the
+   range uncertainty quadruples when `b_perp` and noise are fixed.
 
-3. **Inversely proportional to sin(phi).** Triangulation quality collapses as
-   the crossing angle approaches zero (target nearly on the baseline axis — both
-   sensors looking down the same line). At `phi = 90 deg` the geometry is
-   optimal. The validator already rejects degenerate geometries through its
-   conditioning diagnostic and ray-consistency checks; this is the same
-   phenomenon viewed from the range side.
+2. **Inversely proportional to perpendicular baseline.** Wider useful sensor
+   separation buys linear improvement. Baseline parallel to the line of sight
+   contributes little or no triangulation leverage.
 
-For orientation only: with `sigma_theta = 0.1 deg`, `b = 1 km`, and a favorable
-crossing angle (`sin(phi) ≈ 1`), a target at `r = 10 km` carries a first-order
-range uncertainty on the order of hundreds of meters. At `r = 40 km` it is on
-the order of kilometers. These are geometry-conditional magnitudes, not
-guarantees — actual performance depends on the realized noise, sync precision,
-and crossing angle of the specific event, and the validator's empirical-p95
-construction (see README "Known limitation") is wider than this first-order form
-by design.
+3. **Poor at small crossing angle.** Triangulation quality collapses as `phi`
+   approaches zero. The validator's conditioning and ray-consistency checks
+   reject this same geometric degeneracy.
+
+Checked orientation example: `sigma_theta = 0.1 deg = 0.001745 rad`,
+`b_perp = 1 km`, and `r = 10 km` give
+`(10,000 m)^2 * 0.001745 / 1,000 m ≈ 175 m`. At `r = 40 km`, the same
+calculation gives about `2,793 m`. The 10 km geometry has a small crossing angle
+of about `b_perp/r = 0.1 rad` (about `5.7 deg`), not 90 degrees. These are
+first-order, geometry-conditional magnitudes rather than guarantees. Actual
+performance depends on realized noise and synchronization, and the validator's
+unconditional empirical-p95 construction (see README "Known limitation") is
+wider by design.
 
 ## Detection range vs. validation range
 

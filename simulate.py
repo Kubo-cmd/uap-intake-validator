@@ -37,6 +37,9 @@ def base_record(sp, ld, motion):
         "platform_motion": motion,
         "fps": 1.0,
         "sensor_pos": sp,
+        "position_units": "m",
+        "coordinate_frame": "ENU",
+        "bearing_units": "dimensionless",
         "los_dir": ld,
     }
 
@@ -195,6 +198,8 @@ def tri_regression():
     sp1, ld1 = rays(s1); sp2, ld2 = rays(s2)
     rec = {"sensor_pos": sp1, "los_dir": ld1, "sensor_pos_2": sp2,
            "los_dir_2": ld2, "fps": 30, "bearing_noise_rad": 0,
+           "position_units": "m", "coordinate_frame": "ENU",
+           "bearing_units": "dimensionless", "bearing_noise_units": "rad",
            "time_sync_precision_s": 0}
     tri = triangulate(rec)
     err = _m.dist(tri["position_m"], T) if tri.get("solvable") else float("inf")
@@ -226,7 +231,10 @@ def tri_regression():
             nld2 = perturb(ld2, noise, rng)
             t2 = triangulate({"sensor_pos": sp1, "los_dir": nld1,
                               "sensor_pos_2": sp2, "los_dir_2": nld2, "fps": 30,
-                              "bearing_noise_rad": noise, "time_sync_precision_s": 0})
+                              "bearing_noise_rad": noise, "time_sync_precision_s": 0,
+                              "position_units": "m", "coordinate_frame": "ENU",
+                              "bearing_units": "dimensionless",
+                              "bearing_noise_units": "rad"})
             if t2.get("solvable"):
                 errs.append(_m.dist(t2["position_m"], T))
         med = sorted(errs)[len(errs)//2] if errs else float("nan")

@@ -181,7 +181,9 @@ def run(worlds=200):
         # --- single-sensor conditioning (the flag) ---
         sp = sensor_path(W["family"], n, fps)
         ld = bearing_rays(sp, T, noise)
-        rec = {"sensor_pos": sp, "los_dir": ld, "fps": fps, "sensor_count": 1}
+        rec = {"sensor_pos": sp, "los_dir": ld, "fps": fps, "sensor_count": 1,
+               "position_units": "m", "coordinate_frame": "ENU",
+               "bearing_units": "dimensionless"}
         a = assess_sighting(rec)
         flag = a["underdetermination"]
         cond_total += 1
@@ -197,8 +199,10 @@ def run(worlds=200):
         ld1 = bearing_rays([s1[0], s1[1], s1[2]] * n, T, noise)
         ld2 = bearing_rays([s2[0], s2[1], s2[2]] * n, T, noise)
         trec = {"sensor_pos": [s1[0], s1[1], s1[2]] * n, "los_dir": ld1,
-                "sensor_pos_2": [s2[0], s2[1], s2[2]] * n, "los_dir_2": ld2,
-                "fps": fps, "bearing_noise_rad": noise, "time_sync_precision_s": 0}
+                 "sensor_pos_2": [s2[0], s2[1], s2[2]] * n, "los_dir_2": ld2,
+                 "fps": fps, "bearing_noise_rad": noise, "time_sync_precision_s": 0,
+                 "position_units": "m", "coordinate_frame": "ENU",
+                 "bearing_units": "dimensionless", "bearing_noise_units": "rad"}
         tri = triangulate(trec)
         tri_total += 1
         if tri and tri.get("solvable"):
